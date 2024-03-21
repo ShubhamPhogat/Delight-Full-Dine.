@@ -198,7 +198,6 @@ router.post("/create-checkout-session", async (req, res) => {
       total: req.body.data.total,
     },
   });
-
   const line_items = req.body.data.cart.map((item) => {
     return {
       price_data: {
@@ -361,5 +360,44 @@ router.post("/updateOrder/:order_id", async (req, res) => {
     console.log(`erorr in updating the order itme : ${error}`);
   }
 });
+
+router.post(
+  "/updateLikes/:id",
+  async (req, res) => {
+    const id = req.params.id;
+    let response = [];
+    console.log("this is id ", id);
+    let query = db.collection("Favourites");
+    await query.get().then((querysnap) => {
+      let docs = querysnap.docs;
+      docs.map((doc) => {
+        response.push({ ...doc.data() });
+      });
+
+      return response;
+    });
+    console.log(response[0]);
+    const type = req.query.type;
+    if (type === "curry") {
+      response[0].curry += 1;
+    }
+    if (type === "drinks") {
+      response[0].drinks += 1;
+    }
+    if (type === "fruits") {
+      response[0].fruits += 1;
+    }
+    if (type === "deserts") {
+      response[0].deserts += 1;
+    }
+
+    return res.status(200).send({ success: true, data: response });
+  }
+  // if (updatedlikes.data()) {
+  //   const quant = doc.data.typ + 1;
+  //   await db.collection("Favourites").doc(`/${id}/`).update({ type: quant });
+  //   return res.status(200).send({ success: true });
+  // }
+);
 
 module.exports = router;

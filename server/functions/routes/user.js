@@ -32,6 +32,7 @@ const listAllUsers = async (nextPageToken) => {
     .listUsers(1000, nextPageToken)
     .then((listUsersResult) => {
       listUsersResult.users.forEach((userRecord) => {
+        console.log("correct");
         data.push(userRecord.toJSON());
       });
       // console.log("user", data);
